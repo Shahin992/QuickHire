@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #4640DE;
+  --color-secondary: #38CBF3;
+  --color-dark: #25324B;
+  --color-light: #F8F8FD;
+  --color-muted: #515B6F;
+  --color-border: #D6D6D6;
+  --color-divider: #D6D6D6;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #ffffff;
+  color: #191D23;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+a,
+button,
+[role="button"],
+[role="link"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select,
+summary {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+}
+
+.search-shadow {
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+  @apply bg-primary text-white px-6 py-3 rounded font-semibold hover:bg-primary/90 transition-all border-none cursor-pointer;
+}
+
+.card {
+  @apply bg-white border border-border p-6 rounded-lg transition-all;
+}
+
+.job-tag {
+  @apply px-3 py-1 rounded-full text-xs font-bold;
+}
