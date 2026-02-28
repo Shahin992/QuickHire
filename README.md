@@ -79,6 +79,15 @@ Applications:
 
 This frontend expects JWT-based authentication from the backend.
 
+Admin login:
+
+```json
+{
+  "email": "shahinkhan5979@gmail.com",
+  "password": "qwerty"
+}
+```
+
 Protected admin actions:
 
 - Create a job
@@ -87,8 +96,6 @@ Protected admin actions:
 These routes require:
 
 `Authorization: Bearer <token>`
-
-If you want to document a specific admin email/password, add the real credential values here only if they are safe to store in the repository.
 
 ## Deployment
 
