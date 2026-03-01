@@ -1,4 +1,9 @@
-const TableRowsSkeleton = ({ rows = 5, columns = 5 }) => {
+interface TableRowsSkeletonProps {
+    rows?: number
+    columns?: number
+}
+
+const TableRowsSkeleton = ({ rows = 5, columns = 5 }: TableRowsSkeletonProps) => {
     return Array.from({ length: rows }).map((_, rowIndex) => (
         <tr key={rowIndex} className="animate-pulse">
             {Array.from({ length: columns }).map((__, columnIndex) => (
@@ -7,7 +12,7 @@ const TableRowsSkeleton = ({ rows = 5, columns = 5 }) => {
                 </td>
             ))}
         </tr>
-    ));
-};
+    ))
+}
 
-export default TableRowsSkeleton;
+export default TableRowsSkeleton

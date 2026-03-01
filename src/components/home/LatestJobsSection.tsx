@@ -1,9 +1,15 @@
-import { ArrowRight } from 'lucide-react';
-import LatestJobSkeleton from '../LatestJobSkeleton';
-import CompanyLogo from '../CompanyLogo';
+import { ArrowRight } from 'lucide-react'
+import type { Job } from '../../types'
+import CompanyLogo from '../CompanyLogo'
+import LatestJobSkeleton from '../LatestJobSkeleton'
 
-const LatestJobsSection = ({ latestJobs, loading }) => {
-    const getTagStyles = (text) => {
+interface LatestJobsSectionProps {
+    latestJobs: Job[]
+    loading: boolean
+}
+
+const LatestJobsSection = ({ latestJobs, loading }: LatestJobsSectionProps) => {
+    const getTagStyles = (text: string) => {
         const lower = (text || '').toLowerCase();
 
         if (lower.includes('full-time') || lower.includes('full time')) {
@@ -66,7 +72,7 @@ const LatestJobsSection = ({ latestJobs, loading }) => {
                 </div>
             </div>
         </section>
-    );
-};
+    )
+}
 
-export default LatestJobsSection;
+export default LatestJobsSection

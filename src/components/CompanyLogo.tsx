@@ -1,6 +1,18 @@
-import { cloneElement, isValidElement } from 'react';
+import { cloneElement, isValidElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 
-const logoRegistry = {
+interface LogoConfig {
+    bgClass: string
+    textClass: string
+    content: string | ReactElement<{ className?: string }>
+}
+
+interface CompanyLogoProps {
+    companyName?: string
+    className?: string
+}
+
+const logoRegistry: Record<string, LogoConfig> = {
     revolut: {
         bgClass: 'bg-white border border-[#D6DDEB]',
         textClass: 'text-[#202430] italic font-black',
@@ -138,23 +150,23 @@ const logoRegistry = {
         textClass: 'text-white italic font-black',
         content: 'W',
     },
-};
+}
 
-const CompanyLogo = ({ companyName, className = 'h-12 w-12 text-[22px]' }) => {
-    const key = (companyName || '').trim().toLowerCase();
-    const config = logoRegistry[key];
+const CompanyLogo = ({ companyName, className = 'h-12 w-12 text-[22px]' }: CompanyLogoProps) => {
+    const key = (companyName || '').trim().toLowerCase()
+    const config = logoRegistry[key]
 
     if (!config) {
         return (
             <div className={`flex items-center justify-center overflow-hidden rounded-[0px] bg-[#F8F8FD] text-dark font-bold ${className}`}>
                 {companyName ? companyName.charAt(0).toUpperCase() : 'C'}
             </div>
-        );
+        )
     }
 
-    const content = typeof config.content === 'string'
+    const content: string | ReactNode = typeof config.content === 'string'
         ? <span className="leading-none">{config.content}</span>
-        : config.content;
+        : config.content
 
     return (
         <div className={`flex items-center justify-center shrink-0 overflow-hidden ${config.bgClass} ${config.textClass} ${className}`}>
@@ -164,7 +176,7 @@ const CompanyLogo = ({ companyName, className = 'h-12 w-12 text-[22px]' }) => {
                 })
                 : content}
         </div>
-    );
-};
+    )
+}
 
-export default CompanyLogo;
+export default CompanyLogo

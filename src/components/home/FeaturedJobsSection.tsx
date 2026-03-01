@@ -1,8 +1,14 @@
-import { ArrowRight } from 'lucide-react';
-import JobCard from '../JobCard';
-import JobCardSkeleton from '../JobCardSkeleton';
+import { ArrowRight } from 'lucide-react'
+import type { Job } from '../../types'
+import JobCard from '../JobCard'
+import JobCardSkeleton from '../JobCardSkeleton'
 
-const FeaturedJobsSection = ({ featuredJobs, loading }) => {
+interface FeaturedJobsSectionProps {
+    featuredJobs: Job[]
+    loading: boolean
+}
+
+const FeaturedJobsSection = ({ featuredJobs, loading }: FeaturedJobsSectionProps) => {
     return (
         <section className="py-12 md:py-24 flex justify-center bg-white">
             <div className="w-full max-w-[1440px] px-6 lg:px-[124px]">
@@ -22,8 +28,8 @@ const FeaturedJobsSection = ({ featuredJobs, loading }) => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {featuredJobs.map((job) => (
-                            <JobCard key={job._id || job.title + Math.random()} job={job} />
+                        {featuredJobs.map((job, index) => (
+                            <JobCard key={job._id || `${job.title}-${index}`} job={job} />
                         ))}
                     </div>
                 )}
@@ -32,7 +38,7 @@ const FeaturedJobsSection = ({ featuredJobs, loading }) => {
                 </div>
             </div>
         </section>
-    );
-};
+    )
+}
 
-export default FeaturedJobsSection;
+export default FeaturedJobsSection

@@ -1,49 +1,56 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchJobById, clearCurrentJob } from '../redux/slices/jobSlice';
-import { applicationService } from '../services/api';
-import { MapPin, Briefcase, DollarSign, ArrowLeft, CheckCircle2 } from 'lucide-react';
-import JobDetailsSkeleton from '../components/JobDetailsSkeleton';
+import { ArrowLeft, Briefcase, CheckCircle2, DollarSign, MapPin } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import JobDetailsSkeleton from '../components/JobDetailsSkeleton'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { clearCurrentJob, fetchJobById } from '../redux/slices/jobSlice'
+import { applicationService } from '../services/api'
+import type { ApplicationPayload } from '../types'
 
 const JobDetailsPage = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
-    const { currentJob, loading, error } = useSelector((state) => state.jobs);
+    const { id } = useParams<{ id: string }>()
+    const dispatch = useAppDispatch()
+    const { currentJob, loading, error } = useAppSelector((state) => state.jobs)
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<ApplicationPayload>({
         name: '',
         email: '',
         resumeLink: '',
         coverLetter: '',
-    });
-    const [submitting, setSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
+    })
+    const [submitting, setSubmitting] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
 
     useEffect(() => {
-        dispatch(fetchJobById(id));
-        return () => dispatch(clearCurrentJob());
-    }, [dispatch, id]);
+        if (!id) return
+        dispatch(fetchJobById(id))
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSubmitting(true);
+        return () => {
+            dispatch(clearCurrentJob())
+        }
+    }, [dispatch, id])
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (!id) return
+
+        setSubmitting(true)
         try {
             await applicationService.submitApplication({
                 ...formData,
                 job: id,
-            });
-            setSubmitted(true);
-        } catch (error) {
-            alert('Failed to submit application: ' + (error.response?.data?.message || error.message));
+            })
+            setSubmitted(true)
+        } catch (error: any) {
+            alert(`Failed to submit application: ${error.response?.data?.message || error.message}`)
         } finally {
-            setSubmitting(false);
+            setSubmitting(false)
         }
-    };
+    }
 
-    if (loading) return <JobDetailsSkeleton />;
-    if (error) return <div className="text-center py-20 text-red-500">Error: {error.message || 'Job not found'}</div>;
-    if (!currentJob) return null;
+    if (loading) return <JobDetailsSkeleton />
+    if (error) return <div className="text-center py-20 text-red-500">Error: {error.message || 'Job not found'}</div>
+    if (!currentJob) return null
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-4xl">
@@ -152,7 +159,7 @@ const JobDetailsPage = () => {
                                 <label className="block text-sm font-bold mb-2 text-dark">Cover Note *</label>
                                 <textarea
                                     required
-                                    rows="6"
+                                    rows={6}
                                     className="w-full border border-gray-200 p-4 rounded-[0px] outline-none focus:border-primary transition-colors text-[16px] resize-y"
                                     placeholder="Explain why you are the best fit for this role..."
                                     value={formData.coverLetter}
@@ -171,7 +178,7 @@ const JobDetailsPage = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default JobDetailsPage;
+export default JobDetailsPage

@@ -1,32 +1,33 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { login, clearAuthError } from '../redux/slices/authSlice';
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { clearAuthError, login } from '../redux/slices/authSlice'
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const location = useLocation();
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const location = useLocation()
 
-    const { userInfo, loading, error } = useSelector((state) => state.auth);
-    const successMessage = location.state?.message;
+    const { userInfo, loading, error } = useAppSelector((state) => state.auth)
+    const successMessage = (location.state as { message?: string } | null)?.message
 
     useEffect(() => {
         if (userInfo) {
-            navigate(userInfo.isAdmin ? '/admin' : '/');
+            navigate(userInfo.isAdmin ? '/admin' : '/')
         }
-        return () => {
-            dispatch(clearAuthError());
-        };
-    }, [navigate, userInfo, dispatch]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(login({ email, password }));
-    };
+        return () => {
+            dispatch(clearAuthError())
+        }
+    }, [navigate, userInfo, dispatch])
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        dispatch(login({ email, password }))
+    }
 
     return (
         <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(70,64,222,0.14),_transparent_28%),linear-gradient(180deg,_#f7f8fc_0%,_#eef2f9_100%)] px-6 py-16">
@@ -115,7 +116,7 @@ const LoginPage = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default LoginPage;
+export default LoginPage

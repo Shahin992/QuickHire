@@ -1,3 +1,15 @@
+interface ConfirmationDialogProps {
+    isOpen: boolean
+    title?: string
+    description?: string
+    confirmText?: string
+    cancelText?: string
+    onConfirm: () => void
+    onCancel: () => void
+    loading?: boolean
+    tone?: 'danger' | 'default'
+}
+
 const ConfirmationDialog = ({
     isOpen,
     title = 'Confirm action',
@@ -8,7 +20,7 @@ const ConfirmationDialog = ({
     onCancel,
     loading = false,
     tone = 'danger',
-}) => {
+}: ConfirmationDialogProps) => {
     if (!isOpen) return null;
 
     const confirmClasses = tone === 'danger'
@@ -51,7 +63,7 @@ const ConfirmationDialog = ({
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ConfirmationDialog;
+export default ConfirmationDialog

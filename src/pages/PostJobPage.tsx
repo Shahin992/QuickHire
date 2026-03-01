@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { jobService } from '../services/api';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppSelector } from '../redux/hooks'
+import { jobService } from '../services/api'
+import type { Job } from '../types'
 
 const PostJobPage = () => {
-    const navigate = useNavigate();
-    const { userInfo } = useSelector((state) => state.auth);
+    const navigate = useNavigate()
+    const { userInfo } = useAppSelector((state) => state.auth)
 
     useEffect(() => {
         if (!userInfo || !userInfo.isAdmin) {
-            navigate('/login');
+            navigate('/login')
         }
-    }, [userInfo, navigate]);
+    }, [userInfo, navigate])
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<Omit<Job, '_id' | 'tag2'>>({
         title: '',
         companyName: '',
         location: '',
@@ -22,21 +23,21 @@ const PostJobPage = () => {
         salary: '',
         category: 'Engineering',
         description: '',
-    });
-    const [submitting, setSubmitting] = useState(false);
+    })
+    const [submitting, setSubmitting] = useState(false)
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSubmitting(true);
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setSubmitting(true)
         try {
-            await jobService.createJob(formData);
-            navigate('/admin');
-        } catch (error) {
-            alert('Failed to post job: ' + (error.response?.data?.message || error.message));
+            await jobService.createJob(formData)
+            navigate('/admin')
+        } catch (error: any) {
+            alert(`Failed to post job: ${error.response?.data?.message || error.message}`)
         } finally {
-            setSubmitting(false);
+            setSubmitting(false)
         }
-    };
+    }
 
     return (
         <div className="container mx-auto px-6 py-12 max-w-2xl">
@@ -135,7 +136,7 @@ const PostJobPage = () => {
                         <label className="block text-sm font-bold mb-2">Job Description</label>
                         <textarea
                             required
-                            rows="6"
+                            rows={6}
                             className="w-full border border-gray-200 p-4 rounded-lg outline-none focus:border-primary"
                             placeholder="Enter detailed job requirements and responsibilities..."
                             value={formData.description}
@@ -153,7 +154,7 @@ const PostJobPage = () => {
                 </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default PostJobPage;
+export default PostJobPage

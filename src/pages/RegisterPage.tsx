@@ -1,49 +1,51 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { register, clearAuthError } from '../redux/slices/authSlice';
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { clearAuthError, register } from '../redux/slices/authSlice'
 
 const RegisterPage = () => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [localError, setLocalError] = useState('');
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [localError, setLocalError] = useState('')
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
-    const { userInfo, loading, error: reduxError } = useSelector((state) => state.auth);
+    const { userInfo, loading, error: reduxError } = useAppSelector((state) => state.auth)
 
     useEffect(() => {
         if (userInfo) {
-            navigate(userInfo.isAdmin ? '/admin' : '/');
+            navigate(userInfo.isAdmin ? '/admin' : '/')
         }
-        return () => {
-            dispatch(clearAuthError());
-        };
-    }, [navigate, userInfo, dispatch]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLocalError('');
+        return () => {
+            dispatch(clearAuthError())
+        }
+    }, [navigate, userInfo, dispatch])
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setLocalError('')
+
         if (password !== confirmPassword) {
-            setLocalError('Passwords do not match');
-            return;
+            setLocalError('Passwords do not match')
+            return
         }
 
         try {
-            await dispatch(register({ name, email, password })).unwrap();
+            await dispatch(register({ name, email, password })).unwrap()
             navigate('/login', {
                 replace: true,
                 state: {
                     message: 'Account created successfully. Please log in.',
                 },
-            });
+            })
         } catch {}
-    };
+    }
 
-    const error = localError || reduxError;
+    const error = localError || reduxError
 
     return (
         <div className="min-h-screen bg-[radial-gradient(circle_at_top_right,_rgba(20,33,61,0.12),_transparent_26%),linear-gradient(180deg,_#f7f8fc_0%,_#eef2f9_100%)] px-6 py-16">
@@ -148,7 +150,7 @@ const RegisterPage = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default RegisterPage;
+export default RegisterPage

@@ -1,26 +1,31 @@
-import { useNavigate } from 'react-router-dom';
-import CompanyLogo from './CompanyLogo';
+import { useNavigate } from 'react-router-dom'
+import type { Job } from '../types'
+import CompanyLogo from './CompanyLogo'
 
-const JobCard = ({ job }) => {
-    const navigate = useNavigate();
+interface JobCardProps {
+    job: Job
+}
 
-    const getTagStyles = (text) => {
-        const lower = (text || '').toLowerCase();
+const JobCard = ({ job }: JobCardProps) => {
+    const navigate = useNavigate()
+
+    const getTagStyles = (text: string) => {
+        const lower = (text || '').toLowerCase()
         if (lower.includes('full-time') || lower.includes('full time')) {
-            return 'border border-primary text-primary bg-white';
+            return 'border border-primary text-primary bg-white'
         }
-        if (lower.includes('marketing')) return 'bg-[#FFF2E7] text-[#EB8533] border-transparent';
-        if (lower.includes('design')) return 'bg-[#E7F6EA] text-[#0E9347] border-transparent';
-        if (lower.includes('business')) return 'bg-[#EBEBFF] text-primary border-transparent';
-        if (lower.includes('technology')) return 'bg-[#FEEBEB] text-[#FF6550] border-transparent';
-        return 'bg-gray-100 text-gray-600 border-transparent';
-    };
+        if (lower.includes('marketing')) return 'bg-[#FFF2E7] text-[#EB8533] border-transparent'
+        if (lower.includes('design')) return 'bg-[#E7F6EA] text-[#0E9347] border-transparent'
+        if (lower.includes('business')) return 'bg-[#EBEBFF] text-primary border-transparent'
+        if (lower.includes('technology')) return 'bg-[#FEEBEB] text-[#FF6550] border-transparent'
+        return 'bg-gray-100 text-gray-600 border-transparent'
+    }
 
     const handleCardClick = () => {
         if (job?._id) {
-            navigate(`/job/${job._id}`);
+            navigate(`/job/${job._id}`)
         }
-    };
+    }
 
     return (
         <div
@@ -28,8 +33,8 @@ const JobCard = ({ job }) => {
             onClick={handleCardClick}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleCardClick();
+                    e.preventDefault()
+                    handleCardClick()
                 }
             }}
             role="link"
@@ -61,7 +66,7 @@ const JobCard = ({ job }) => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default JobCard;
+export default JobCard

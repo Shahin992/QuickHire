@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
-import { fetchJobs } from '../redux/slices/jobSlice';
-import JobCard from '../components/JobCard';
-import JobCardSkeleton from '../components/JobCardSkeleton';
-import { Search, MapPin, Briefcase } from 'lucide-react';
+import { Briefcase, MapPin, Search } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import JobCard from '../components/JobCard'
+import JobCardSkeleton from '../components/JobCardSkeleton'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { fetchJobs } from '../redux/slices/jobSlice'
+import type { JobQueryParams } from '../types'
 
 const categoriesList = [
     { name: 'All Categories', value: '' },
@@ -19,31 +20,36 @@ const categoriesList = [
 ];
 
 const JobListingsPage = () => {
-    const dispatch = useDispatch();
-    const [searchParams, setSearchParams] = useSearchParams();
+    const dispatch = useAppDispatch()
+    const [searchParams, setSearchParams] = useSearchParams()
 
-    const { jobs, loading, error } = useSelector((state) => state.jobs);
+    const { jobs, loading, error } = useAppSelector((state) => state.jobs)
 
-    const [titleSearch, setTitleSearch] = useState(searchParams.get('title') || '');
-    const [locationSearch, setLocationSearch] = useState(searchParams.get('location') || '');
-    const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || '');
+    const [titleSearch, setTitleSearch] = useState(searchParams.get('title') || '')
+    const [locationSearch, setLocationSearch] = useState(searchParams.get('location') || '')
+    const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || '')
 
     useEffect(() => {
-        const params = {};
-        if (searchParams.get('title')) params.title = searchParams.get('title');
-        if (searchParams.get('location')) params.location = searchParams.get('location');
-        if (searchParams.get('category')) params.category = searchParams.get('category');
-        dispatch(fetchJobs(params));
-    }, [dispatch, searchParams]);
+        const params: JobQueryParams = {}
+        const title = searchParams.get('title')
+        const location = searchParams.get('location')
+        const category = searchParams.get('category')
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        const params = new URLSearchParams();
-        if (titleSearch) params.set('title', titleSearch);
-        if (locationSearch) params.set('location', locationSearch);
-        if (categoryFilter) params.set('category', categoryFilter);
-        setSearchParams(params);
-    };
+        if (title) params.title = title
+        if (location) params.location = location
+        if (category) params.category = category
+
+        dispatch(fetchJobs(params))
+    }, [dispatch, searchParams])
+
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const params = new URLSearchParams()
+        if (titleSearch) params.set('title', titleSearch)
+        if (locationSearch) params.set('location', locationSearch)
+        if (categoryFilter) params.set('category', categoryFilter)
+        setSearchParams(params)
+    }
 
     return (
         <div className="bg-[#F8F8FD] min-h-screen py-16">
@@ -92,7 +98,7 @@ const JobListingsPage = () => {
                                     value={categoryFilter}
                                     onChange={(e) => setCategoryFilter(e.target.value)}
                                 >
-                                    {categoriesList.map(cat => (
+                                    {categoriesList.map((cat) => (
                                         <option key={cat.value} value={cat.value}>{cat.name}</option>
                                     ))}
                                 </select>
@@ -117,7 +123,7 @@ const JobListingsPage = () => {
                         </div>
                     </div>
                 ) : error ? (
-                    <div className="text-center py-20 font-['Inter'] text-red-500 text-xl">Error: {error}</div>
+                    <div className="text-center py-20 font-['Inter'] text-red-500 text-xl">Error: {error.message || 'Failed to load jobs'}</div>
                 ) : (
                     <div>
                         <div className="mb-6 flex justify-between items-center font-['Inter'] text-[#515B6F]">
@@ -126,8 +132,8 @@ const JobListingsPage = () => {
 
                         {jobs.length > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                {jobs.map(job => (
-                                    <JobCard key={job._id || job.title + Math.random()} job={job} />
+                                {jobs.map((job, index) => (
+                                    <JobCard key={job._id || `${job.title}-${index}`} job={job} />
                                 ))}
                             </div>
                         ) : (
@@ -151,7 +157,7 @@ const JobListingsPage = () => {
                 )}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default JobListingsPage;
+export default JobListingsPage

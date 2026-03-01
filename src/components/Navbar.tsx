@@ -1,17 +1,17 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../redux/slices/authSlice';
-import { Menu } from 'lucide-react';
+import { Menu } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { logout } from '../redux/slices/authSlice'
 
 const Navbar = () => {
-    const { userInfo } = useSelector((state) => state.auth);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const { userInfo } = useAppSelector((state) => state.auth)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     const handleLogout = () => {
-        dispatch(logout());
-        navigate('/');
-    };
+        dispatch(logout())
+        navigate('/')
+    }
 
     return (
         <nav className="bg-[#F8F8FD] h-[80px] flex items-center justify-center sticky top-0 z-50">
@@ -52,7 +52,7 @@ const Navbar = () => {
                 </div>
             </div>
         </nav>
-    );
-};
+    )
+}
 
-export default Navbar;
+export default Navbar

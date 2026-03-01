@@ -1,46 +1,49 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchJobById } from '../redux/slices/jobSlice';
-import { applicationService } from '../services/api';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { fetchJobById } from '../redux/slices/jobSlice'
+import { applicationService } from '../services/api'
+import type { ApplicationPayload } from '../types'
 
 const ApplyJobPage = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { currentJob } = useSelector((state) => state.jobs);
+    const { id } = useParams<{ id: string }>()
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const { currentJob } = useAppSelector((state) => state.jobs)
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<ApplicationPayload>({
         name: '',
         email: '',
         resumeLink: '',
         coverLetter: '',
-    });
-    const [submitting, setSubmitting] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
+    })
+    const [submitting, setSubmitting] = useState(false)
+    const [submitted, setSubmitted] = useState(false)
 
     useEffect(() => {
-        if (!currentJob || currentJob._id !== id) {
-            dispatch(fetchJobById(id));
+        if (id && (!currentJob || currentJob._id !== id)) {
+            dispatch(fetchJobById(id))
         }
-    }, [dispatch, id, currentJob]);
+    }, [dispatch, id, currentJob])
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSubmitting(true);
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (!id) return
+
+        setSubmitting(true)
         try {
             await applicationService.submitApplication({
                 ...formData,
                 job: id,
-            });
-            setSubmitted(true);
-        } catch (error) {
-            alert('Failed to submit application: ' + (error.response?.data?.message || error.message));
+            })
+            setSubmitted(true)
+        } catch (error: any) {
+            alert(`Failed to submit application: ${error.response?.data?.message || error.message}`)
         } finally {
-            setSubmitting(false);
+            setSubmitting(false)
         }
-    };
+    }
 
     if (submitted) {
         return (
@@ -57,7 +60,7 @@ const ApplyJobPage = () => {
                     </button>
                 </div>
             </div>
-        );
+        )
     }
 
     return (
@@ -108,7 +111,7 @@ const ApplyJobPage = () => {
                         <label className="block text-sm font-bold mb-2">Cover Letter</label>
                         <textarea
                             required
-                            rows="6"
+                            rows={6}
                             className="w-full border border-gray-200 p-4 rounded-lg outline-none focus:border-primary"
                             placeholder="Explain why you are the best fit for this role..."
                             value={formData.coverLetter}
@@ -125,7 +128,7 @@ const ApplyJobPage = () => {
                 </form>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ApplyJobPage;
+export default ApplyJobPage

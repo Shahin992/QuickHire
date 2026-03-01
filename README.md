@@ -1,6 +1,6 @@
 # QuickHire Frontend
 
-QuickHire is a React + Vite job portal frontend. It connects to the QuickHire backend API for authentication, job listings, job details, job posting, and job applications.
+QuickHire is a React + Vite + TypeScript job portal frontend. It connects to the QuickHire backend API for authentication, job listings, job details, job posting, and job applications.
 
 ## Backend
 
@@ -19,6 +19,7 @@ Health check:
 ## Tech Stack
 
 - React
+- TypeScript
 - Vite
 - Redux Toolkit
 - React Router
@@ -104,4 +105,5 @@ The project includes [vercel.json](/home/shahin983/Projects/Qtec-task-front-end/
 ## Notes
 
 - Restart the dev server after changing `.env`.
+- The application source and Vite config now use `.ts` and `.tsx`.
 - In development, React Strict Mode may re-run effects. The jobs fetch logic has been guarded to avoid duplicate API requests for the same in-flight request.

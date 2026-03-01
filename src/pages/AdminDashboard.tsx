@@ -1,25 +1,26 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-import { fetchJobs, deleteJob } from '../redux/slices/jobSlice';
-import ConfirmationDialog from '../components/ConfirmationDialog';
-import TableRowsSkeleton from '../components/TableRowsSkeleton';
-import { Plus, Trash2, ExternalLink } from 'lucide-react';
+import { ExternalLink, Plus, Trash2 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import ConfirmationDialog from '../components/ConfirmationDialog'
+import TableRowsSkeleton from '../components/TableRowsSkeleton'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
+import { deleteJob, fetchJobs } from '../redux/slices/jobSlice'
+import type { Job } from '../types'
 
 const AdminDashboard = () => {
-    const dispatch = useDispatch();
-    const { jobs, loading, deletingJobId, error } = useSelector((state) => state.jobs);
-    const { userInfo } = useSelector((state) => state.auth);
-    const navigate = useNavigate();
-    const [jobToDelete, setJobToDelete] = useState(null);
+    const dispatch = useAppDispatch()
+    const { jobs, loading, deletingJobId, error } = useAppSelector((state) => state.jobs)
+    const { userInfo } = useAppSelector((state) => state.auth)
+    const navigate = useNavigate()
+    const [jobToDelete, setJobToDelete] = useState<Job | null>(null)
 
     useEffect(() => {
         if (!userInfo || !userInfo.isAdmin) {
-            navigate('/login');
+            navigate('/login')
         } else {
-            dispatch(fetchJobs());
+            dispatch(fetchJobs())
         }
-    }, [dispatch, userInfo, navigate]);
+    }, [dispatch, userInfo, navigate])
 
     const isDeleting = Boolean(jobToDelete && deletingJobId === jobToDelete._id);
 
@@ -27,19 +28,19 @@ const AdminDashboard = () => {
         if (!jobToDelete) return '';
 
         return `This will permanently remove "${jobToDelete.title}" from ${jobToDelete.companyName}. This action cannot be undone.`;
-    }, [jobToDelete]);
+    }, [jobToDelete])
 
     const handleDeleteConfirm = async () => {
         if (!jobToDelete?._id) return;
 
         try {
-            await dispatch(deleteJob(jobToDelete._id)).unwrap();
-            await dispatch(fetchJobs()).unwrap();
-            setJobToDelete(null);
+            await dispatch(deleteJob(jobToDelete._id)).unwrap()
+            await dispatch(fetchJobs()).unwrap()
+            setJobToDelete(null)
         } catch {
-            console.log('error');
+            console.log('error')
         }
-    };
+    }
 
     return (
         <div className="container mx-auto px-6 py-12">
@@ -74,7 +75,7 @@ const AdminDashboard = () => {
                         {loading && jobs.length === 0 ? (
                             <TableRowsSkeleton rows={6} columns={5} />
                         ) : jobs.length === 0 ? (
-                            <tr><td colSpan="5" className="px-6 py-10 text-center text-muted">No jobs found.</td></tr>
+                            <tr><td colSpan={5} className="px-6 py-10 text-center text-muted">No jobs found.</td></tr>
                         ) : (
                             jobs.map((job) => (
                                 <tr key={job._id} className="hover:bg-gray-50 transition-colors">
@@ -126,7 +127,7 @@ const AdminDashboard = () => {
                 loading={isDeleting}
             />
         </div>
-    );
-};
+    )
+}
 
-export default AdminDashboard;
+export default AdminDashboard
