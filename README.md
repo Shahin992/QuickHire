@@ -2,6 +2,25 @@
 
 QuickHire is a React + Vite + TypeScript job portal frontend. It connects to the QuickHire backend API for authentication, job listings, job details, job posting, and job applications.
 
+## Admin Credentials
+
+This frontend expects JWT-based authentication from the backend.
+
+Admin login:
+
+```json
+{
+  "email": "shahinkhan5979@gmail.com",
+  "password": "qwerty"
+}
+```
+
+Protected admin actions:
+
+- Create a job
+- Delete a job
+
+
 ## Backend
 
 Base URL:
